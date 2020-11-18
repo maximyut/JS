@@ -1,106 +1,80 @@
 "use strict";
-let numberOfFilms;
-
-function start() {
-  numberOfFilms = +prompt('Сколько фильмов посмотрел?', '');
-
-  while (numberOfFilms == '' || numberOfFilms == null || isNaN(numberOfFilms)) {
-    numberOfFilms = +prompt('Сколько фильмов посмотрел?', '');
-  }
-}
-
-// start();
 
 const personalMovieDB = {
-  count: numberOfFilms,
+  count: 0,
   movies: {},
   actors: {},
   genres: [],
-  privat: false
-};
+  privat: false,
+  start: function() {
+    personalMovieDB.count = +prompt('Сколько фильмов посмотрел?', '');
+  
+    while (personalMovieDB.count == '' || personalMovieDB.count == null || isNaN(personalMovieDB.count)) {
+      personalMovieDB.count = +prompt('Сколько фильмов посмотрел?', '');
+    }
+  },
 
+  rememberMyFilms: function () {
+    for (let i = 0; i < 2; i++) {
+      const a = prompt('Один из последних просмотренных фильмов?', ''),
+        b = prompt('На сколько вы его оцените?', '');
 
+      if (a != null && b != null && a != '' && b != '' && a.length < 50) {
+        personalMovieDB.movies[a] = b;
+        console.log('done');
+      } else {
+        i--;
+        console.log('error');
+      }
+    }
+  },
 
-
-function rememberMyFilms() {
-  for (let i = 0; i < 2; i++) {
-    const a = prompt('Один из последних просмотренных фильмов?', ''),
-      b = prompt('На сколько вы его оцените?', '');
-
-    if (a != null && b != null && a != '' && b != '' && a.length < 50) {
-      personalMovieDB.movies[a] = b;
-      console.log('done');
+  detectPersonalLevel: function () {
+    if (personalMovieDB.count < 10) {
+      alert('Просмотрено довольно мало фильмов');
+    } else if (personalMovieDB.count >= 10 && personalMovieDB.count < 30) {
+      alert('Вы кассический зритель');
+    } else if (personalMovieDB.count >= 30) {
+      alert('Вы киноман');
     } else {
-      i--;
-      console.log('error');
+      alert('произошла ошибка');
+    }
+  },
+
+  writeYourGenres: function () {
+    for (let i = 1; i <= 3; i++) {
+      let genre = prompt(`Ваш люимый жанр под номером ${i}`, '');
+
+      if (genre == '' || genre == null) {
+        personalMovieDB.genres[i - 1] = prompt(`Ваш любмый жанр под номером ${i}`, '');
+        i--;
+      } else {
+        personalMovieDB.genres[i - 1] = genre;
+      }
+      
+    }
+    personalMovieDB.genres.forEach((item, i) => {
+      console.log(`Любимый жанр ${i + 1} - это ${item}`);
+    });
+  },
+
+  
+  showMyDB: function (hidden) {
+    if (!hidden) {
+      console.log(personalMovieDB);
+    } else {
+      alert('Ошибка доступа');
+    }
+  },
+
+  toggleVisibleMyDB: function () {
+    if (personalMovieDB.privat) {
+      personalMovieDB.privat = false;
+    } else {
+      personalMovieDB.privat = true;
     }
   }
-}
 
-// rememberMyFilms();
+};
 
-// let i = 0;
-
-// while (i < 2) {
-//   const a = prompt('Один из последних просмотренных фильмов?', ''),
-//         b = prompt('На сколько вы его оцените?', '');
-
-//   if (a != null && b != null && a != '' && b != '' && a.length < 50) {
-//     personalMovieDB.movies[a] = b;
-//     console.log('done');
-//   } else {
-//     i--;
-//     console.log('error');
-//   }
-//   i++;
-// }
-
-// do {
-//   const a = prompt('Один из последних просмотренных фильмов?', ''),
-//     b = prompt('На сколько вы его оцените?', '');
-
-//   if (a != null && b != null && a != '' && b != '' && a.length < 50) {
-//     personalMovieDB.movies[a] = b;
-//     console.log('done');
-//   } else {
-//     i--;
-//     console.log('error');
-//   }
-// //   i++;
-// } while (i < 2);
-
-
-
-function detectPersonalLevel() {
-  if (personalMovieDB.count < 10) {
-    alert('Просмотрено довольно мало фильмов');
-  } else if (personalMovieDB.count >= 10 && personalMovieDB.count < 30) {
-    alert('Вы кассический зритель');
-  } else if (personalMovieDB.count >= 30) {
-    alert('Вы киноман');
-  } else {
-    alert('произошла ошибка');
-  }
-}
-
-// detectPersonalLevel();
-
-function writeYourGenres() {
-  for (let i = 1; i <= 3; i++) {
-    personalMovieDB.genres[i - 1] = prompt(`Ваш люимый жанр под номером ${i}`, '');
-  }
-}
-
-writeYourGenres();
-
-
-
-function showMyDB(hidden) {
-  if (!hidden) {
-    console.log(personalMovieDB);
-  } else {
-    alert('Ошибка доступа');
-  }
-}
-
-showMyDB(personalMovieDB.privat);
+personalMovieDB.writeYourGenres();
