@@ -101,13 +101,16 @@ window.addEventListener('DOMContentLoaded', () => {
     modalCloseBtn = document.querySelector('[data-close]');
 
   modalTrigger.forEach(btn => {
-    btn.addEventListener('click', function () {
-      modal.classList.add('show');
-      modal.classList.remove('hide');
-      // Либо вариант с toggle - но тогда назначить класс в верстке
-      document.body.style.overflow = 'hidden'; // Запрещение прокрутки
-    });
+    btn.addEventListener('click', openModal);
   });
+
+  function openModal() {
+    modal.classList.add('show');
+    modal.classList.remove('hide');
+    // Либо вариант с toggle - но тогда назначить класс в верстке
+    document.body.style.overflow = 'hidden'; // Запрещение прокрутки
+    clearInterval(modalTimerId);
+  }
 
   function closeModal() {
     modal.classList.add('hide');
@@ -124,9 +127,19 @@ window.addEventListener('DOMContentLoaded', () => {
     }
   });
 
-  document.addEventListener('keydown', (e) => {  // закрытие при нажатии клавиши
+  document.addEventListener('keydown', (e) => { // закрытие при нажатии клавиши
     if (e.code === "Escape" && modal.classList.contains('show')) {
       closeModal();
     }
   });
+
+  const modalTimerId = setTimeout(openModal, 3000);
+
+  function showModalByScroll() {
+    if (window.pageYOffset + document.documentElement.clientHeight >= document.documentElement.scrollHeight) {
+      openModal();
+      window.removeEventListener('scroll', showModalByScroll);
+    }
+  }
+  window.addEventListener('scroll', showModalByScroll);
 });
